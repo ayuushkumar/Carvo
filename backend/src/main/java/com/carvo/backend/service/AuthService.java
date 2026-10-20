@@ -6,6 +6,7 @@ import com.carvo.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.carvo.backend.dto.LoginRequest;
 
 @Service
 public class AuthService {
@@ -36,4 +37,21 @@ public class AuthService {
 
         return userRepository.save(user);
     }
+
+    public User login(LoginRequest request) {
+        String email = request.getEmail().trim().toLowerCase();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Invalid email or password"));
+
+        if (!passwordEncoder.matches(
+                request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException(
+                    "Invalid email or password");
+        }
+
+        return user;
+    }
+
 }

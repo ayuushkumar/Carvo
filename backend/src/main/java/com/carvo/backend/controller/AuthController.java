@@ -6,6 +6,7 @@ import com.carvo.backend.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import com.carvo.backend.dto.LoginRequest;
 
 import java.util.Map;
 
@@ -33,4 +34,19 @@ public class AuthController {
                 "email", user.getEmail()
         );
     }
+
+    @PostMapping("/login")
+    public Map<String, Object> login(
+            @Valid @RequestBody LoginRequest request) {
+
+        User user = authService.login(request);
+
+        return Map.of(
+                "message", "Login successful",
+                "id", user.getId(),
+                "fullName", user.getFullName(),
+                "email", user.getEmail()
+        );
+    }
+
 }
