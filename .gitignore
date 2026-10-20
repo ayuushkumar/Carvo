@@ -1,0 +1,22 @@
+# IntelliJ
+.idea/
+**/.idea/
+*.iml
+
+# Java / Maven
+**/target/
+*.class
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+
+# OS
+.DS_Store
+Thumbs.db
