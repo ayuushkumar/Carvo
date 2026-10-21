@@ -11,6 +11,7 @@ import Profile from './pages/Profile.jsx'
 import Vehicles from './pages/Vehicles.jsx'
 import Reviews from './pages/Reviews.jsx'
 import Safety from './pages/Safety.jsx'
+import RideRescue from './pages/RideRescue.jsx'
 
 function Home() {
   return (
@@ -152,6 +153,7 @@ function App() {
         <Route path="/vehicles" element={<Vehicles />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/safety" element={<Safety />} />
+        <Route path="/ride-rescue" element={<RideRescue />} />
       </Routes>
   )
 }
