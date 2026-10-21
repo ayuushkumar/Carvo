@@ -4,6 +4,12 @@ import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 import Rides from './pages/Rides.jsx'
 import RideDetails from './pages/RideDetails.jsx'
+import BookingConfirmation from './pages/BookingConfirmation.jsx'
+import OfferRide from './pages/OfferRide.jsx'
+import MyRides from './pages/MyRides.jsx'
+import Profile from './pages/Profile.jsx'
+import Vehicles from './pages/Vehicles.jsx'
+import Reviews from './pages/Reviews.jsx'
 
 function Home() {
   return (
@@ -33,6 +39,41 @@ function Home() {
               >
                 Sign up
               </Link>
+
+
+              <Link
+                  to="/profile"
+                  className="text-sm font-medium text-slate-700 transition hover:text-emerald-600"
+              >
+                Profile
+              </Link>
+
+
+
+
+              <Link
+                  to="/offer-ride"
+                  className="rounded-lg px-4 py-2 text-sm font-semibold hover:bg-slate-100"
+              >
+                Offer a Ride
+              </Link>
+
+
+              <Link
+                  to="/vehicles"
+                  className="text-sm font-medium text-slate-700 transition hover:text-emerald-600"
+              >
+                My Vehicles
+              </Link>
+
+
+              <Link
+                  to="/my-rides"
+                  className="text-sm font-medium text-slate-700 transition hover:text-emerald-600"
+              >
+                My Rides
+              </Link>
+
             </div>
           </nav>
         </header>
@@ -93,6 +134,15 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/rides" element={<Rides />} />
         <Route path="/ride-details" element={<RideDetails />} />
+        <Route
+            path="/booking-confirmation"
+            element={<BookingConfirmation />}
+        />
+        <Route path="/offer-ride" element={<OfferRide />} />
+        <Route path="/my-rides" element={<MyRides />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/vehicles" element={<Vehicles />} />
+        <Route path="/reviews" element={<Reviews />} />
       </Routes>
   )
 }
