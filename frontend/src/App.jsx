@@ -66,6 +66,13 @@ function Home() {
                 My Vehicles
               </Link>
 
+              <Link
+                  to="/reviews"
+                  className="text-sm font-medium text-slate-700 transition hover:text-emerald-600"
+              >
+                Reviews
+              </Link>
+
 
               <Link
                   to="/my-rides"
