@@ -10,6 +10,7 @@ import MyRides from './pages/MyRides.jsx'
 import Profile from './pages/Profile.jsx'
 import Vehicles from './pages/Vehicles.jsx'
 import Reviews from './pages/Reviews.jsx'
+import Safety from './pages/Safety.jsx'
 
 function Home() {
   return (
@@ -150,6 +151,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/vehicles" element={<Vehicles />} />
         <Route path="/reviews" element={<Reviews />} />
+        <Route path="/safety" element={<Safety />} />
       </Routes>
   )
 }
