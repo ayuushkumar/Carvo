@@ -2,6 +2,7 @@
 import { Link, Routes, Route } from 'react-router-dom'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
+import Rides from './pages/Rides.jsx'
 
 function Home() {
   return (
@@ -13,6 +14,12 @@ function Home() {
             </Link>
 
             <div className="flex items-center gap-3">
+              <Link
+                  to="/rides"
+                  className="rounded-xl bg-emerald-700 px-6 py-3 font-semibold text-white hover:bg-emerald-800"
+              >
+                Find a ride →
+              </Link>
               <Link
                   to="/login"
                   className="rounded-lg px-4 py-2 text-sm font-semibold hover:bg-slate-100"
@@ -83,6 +90,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/rides" element={<Rides />} />
       </Routes>
   )
 }
