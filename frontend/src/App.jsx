@@ -3,6 +3,7 @@ import { Link, Routes, Route } from 'react-router-dom'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 import Rides from './pages/Rides.jsx'
+import RideDetails from './pages/RideDetails.jsx'
 
 function Home() {
   return (
@@ -91,6 +92,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/rides" element={<Rides />} />
+        <Route path="/ride-details" element={<RideDetails />} />
       </Routes>
   )
 }
