@@ -11,8 +11,9 @@ const sampleRides = [
         arrival: '11:00 AM',
         price: 350,
         seats: 2,
-        driver: 'Aarav Sharma',
+        driver: 'Aavi Sharma',
         rating: 4.8,
+        car: 'Comfortable 4-seater car',
     },
     {
         id: 2,
@@ -25,6 +26,7 @@ const sampleRides = [
         seats: 3,
         driver: 'Simran Kaur',
         rating: 4.9,
+        car: 'Comfortable 4-seater car',
     },
     {
         id: 3,
@@ -37,6 +39,7 @@ const sampleRides = [
         seats: 2,
         driver: 'Kabir Singh',
         rating: 4.7,
+        car: 'Comfortable 4-seater car',
     },
 ]
 
@@ -246,7 +249,7 @@ function Rides() {
                     </form>
                 </section>
 
-                {/* Search results heading */}
+                {/* Search results */}
                 <section className="mt-12">
                     <div className="flex flex-wrap items-end justify-between gap-3">
                         <div>
@@ -329,13 +332,14 @@ function Rides() {
                                             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-slate-100 pt-4 text-sm text-slate-600">
                         <span>
                           📅{' '}
-                            {new Date(
-                                `${ride.date}T00:00:00`
-                            ).toLocaleDateString('en-IN', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                            })}
+                            {new Date(`${ride.date}T00:00:00`).toLocaleDateString(
+                                'en-IN',
+                                {
+                                    day: 'numeric',
+                                    month: 'short',
+                                    year: 'numeric',
+                                },
+                            )}
                         </span>
 
                                                 <span>💺 {ride.seats} seats available</span>
@@ -356,6 +360,7 @@ function Rides() {
 
                                             <Link
                                                 to="/ride-details"
+                                                state={{ ride }}
                                                 className="mt-5 inline-block rounded-lg bg-emerald-700 px-5 py-3 text-center font-semibold text-white hover:bg-emerald-800"
                                             >
                                                 View details →
@@ -394,6 +399,7 @@ function Rides() {
             <footer className="mt-16 border-t border-slate-200 bg-white">
                 <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
                     <p>© 2026 Carvo. Better journeys, together.</p>
+
                     <Link to="/" className="font-semibold hover:text-emerald-700">
                         Back to home
                     </Link>
