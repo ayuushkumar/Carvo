@@ -14,6 +14,7 @@ import Reviews from './pages/Reviews.jsx'
 import Safety from './pages/Safety.jsx'
 import RideRescue from './pages/RideRescue.jsx'
 
+
 function Home() {
   const [distance, setDistance] = useState('100')
   const [mileage, setMileage] = useState('15')
@@ -50,6 +51,7 @@ function Home() {
   return (
       <div className="min-h-screen bg-slate-50 text-slate-900">
         <header className="border-b border-slate-200 bg-white">
+
           <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-5">
             <Link to="/" className="text-2xl font-bold text-emerald-700">
               carvo.
@@ -80,6 +82,16 @@ function Home() {
               <Link to="/my-rides" className="text-sm font-medium text-slate-700 hover:text-emerald-600">
                 My Rides
               </Link>
+
+                <div className="flex flex-wrap items-center gap-3">
+                <Link
+                    to="/ride-rescue"
+                    className="rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2"
+                    aria-label="SOS: Open Ride Rescue"
+                >
+                    🆘 SOS Help
+                </Link>
+                </div>
             </div>
           </nav>
         </header>
@@ -107,6 +119,7 @@ function Home() {
                 Calculate fare ↓
               </a>
             </div>
+
           </section>
 
           {/* Fair Fare Calculator */}
@@ -150,6 +163,8 @@ function Home() {
                     className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 />
               </div>
+
+
 
               <div>
                 <label htmlFor="mileage" className="mb-2 block text-sm font-semibold">
@@ -245,6 +260,8 @@ function Home() {
                     maintenance, and other expenses.
                   </p>
                 </div>
+
+
             )}
 
             {calculated && !validInputs && (
