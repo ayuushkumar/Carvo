@@ -1,5 +1,6 @@
+
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 const sampleRides = [
     {
@@ -44,14 +45,22 @@ const sampleRides = [
 ]
 
 function Rides() {
-    const [search, setSearch] = useState({
-        from: '',
-        to: '',
-        date: '',
-        passengers: '1',
-    })
+    const [searchParams] = useSearchParams()
 
-    const [hasSearched, setHasSearched] = useState(false)
+    const [search, setSearch] = useState(() => ({
+        from: searchParams.get('from') || '',
+        to: searchParams.get('to') || '',
+        date: searchParams.get('date') || '',
+        passengers: '1',
+    }))
+
+    const [hasSearched, setHasSearched] = useState(() =>
+        Boolean(
+            searchParams.get('from') ||
+            searchParams.get('to') ||
+            searchParams.get('date')
+        )
+    )
 
     const filteredRides = sampleRides.filter((ride) => {
         const matchesFrom = ride.from
@@ -64,15 +73,9 @@ function Rides() {
 
         const matchesDate = !search.date || ride.date === search.date
 
-        const matchesPassengers =
-            ride.seats >= Number(search.passengers)
+        const matchesPassengers = ride.seats >= Number(search.passengers)
 
-        return (
-            matchesFrom &&
-            matchesTo &&
-            matchesDate &&
-            matchesPassengers
-        )
+        return matchesFrom && matchesTo && matchesDate && matchesPassengers
     })
 
     function handleSearch(event) {
@@ -136,8 +139,8 @@ function Rides() {
                     </h1>
 
                     <p className="mt-4 max-w-2xl leading-7 text-slate-600">
-                        Search available rides, compare prices, and find people
-                        travelling your way.
+                        Search available rides, compare prices, and find people travelling
+                        your way.
                     </p>
                 </section>
 
@@ -152,7 +155,6 @@ function Rides() {
                                 >
                                     From
                                 </label>
-
                                 <input
                                     id="from"
                                     type="text"
@@ -172,7 +174,6 @@ function Rides() {
                                 >
                                     To
                                 </label>
-
                                 <input
                                     id="to"
                                     type="text"
@@ -192,7 +193,6 @@ function Rides() {
                                 >
                                     Travel date
                                 </label>
-
                                 <input
                                     id="date"
                                     type="date"
@@ -211,15 +211,11 @@ function Rides() {
                                 >
                                     Passengers
                                 </label>
-
                                 <select
                                     id="passengers"
                                     value={search.passengers}
                                     onChange={(event) =>
-                                        setSearch({
-                                            ...search,
-                                            passengers: event.target.value,
-                                        })
+                                        setSearch({ ...search, passengers: event.target.value })
                                     }
                                     className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
                                 >
@@ -268,7 +264,6 @@ function Rides() {
                         </p>
                     </div>
 
-                    {/* Ride cards */}
                     {filteredRides.length > 0 ? (
                         <div className="mt-6 grid gap-5">
                             {filteredRides.map((ride) => (
@@ -314,9 +309,7 @@ function Rides() {
 
                                                     <div className="flex flex-wrap items-center justify-between gap-2">
                                                         <div>
-                                                            <h3 className="text-lg font-bold">
-                                                                {ride.to}
-                                                            </h3>
+                                                            <h3 className="text-lg font-bold">{ride.to}</h3>
                                                             <p className="mt-1 text-sm text-slate-500">
                                                                 Arrival
                                                             </p>
@@ -338,7 +331,7 @@ function Rides() {
                                     day: 'numeric',
                                     month: 'short',
                                     year: 'numeric',
-                                },
+                                }
                             )}
                         </span>
 
@@ -349,10 +342,7 @@ function Rides() {
                                         {/* Price and details link */}
                                         <div className="flex min-w-44 flex-col items-start justify-between border-t border-slate-100 pt-5 md:items-end md:border-l md:border-t-0 md:pl-8 md:pt-0">
                                             <div>
-                                                <p className="text-sm text-slate-500">
-                                                    Price per seat
-                                                </p>
-
+                                                <p className="text-sm text-slate-500">Price per seat</p>
                                                 <p className="mt-1 text-3xl font-extrabold text-emerald-700">
                                                     ₹{ride.price}
                                                 </p>
@@ -371,16 +361,14 @@ function Rides() {
                             ))}
                         </div>
                     ) : (
-                        /* Empty search state */
                         <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
                             <div className="text-4xl">🚗</div>
 
-                            <h3 className="mt-4 text-xl font-bold">
-                                No rides found
-                            </h3>
+                            <h3 className="mt-4 text-xl font-bold">No rides found</h3>
 
                             <p className="mx-auto mt-2 max-w-md text-slate-600">
-                                Try a different location, date, or passenger count.
+                                No demo rides match your search. Try a different location,
+                                date, or passenger count.
                             </p>
 
                             <button
