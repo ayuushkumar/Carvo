@@ -46,6 +46,7 @@ const sampleRides = [
 
 function Rides() {
     const [searchParams] = useSearchParams()
+
     const [sortOrder, setSortOrder] = useState('default')
 
     const [search, setSearch] = useState(() => ({
@@ -68,13 +69,11 @@ function Rides() {
             .toLowerCase()
             .includes(search.from.trim().toLowerCase())
 
-
         const matchesTo = ride.to
             .toLowerCase()
             .includes(search.to.trim().toLowerCase())
 
         const matchesDate = !search.date || ride.date === search.date
-
         const matchesPassengers = ride.seats >= Number(search.passengers)
 
         return matchesFrom && matchesTo && matchesDate && matchesPassengers
@@ -87,6 +86,10 @@ function Rides() {
 
         if (sortOrder === 'price-high') {
             return b.price - a.price
+        }
+
+        if (sortOrder === 'rating-high') {
+            return b.rating - a.rating
         }
 
         return 0
@@ -105,6 +108,7 @@ function Rides() {
             passengers: '1',
         })
         setHasSearched(false)
+        setSortOrder('default')
     }
 
     return (
@@ -260,7 +264,6 @@ function Rides() {
                 </section>
 
                 {/* Search results */}
-
                 <section className="mt-12">
                     <div className="flex flex-wrap items-end justify-between gap-3">
                         <div>
@@ -279,6 +282,7 @@ function Rides() {
                         </p>
                     </div>
 
+                    {/* Sorting options */}
                     <div className="mt-5 flex flex-wrap items-center gap-3">
                         <label htmlFor="sort-price" className="text-sm font-semibold">
                             Sort rides:
@@ -293,10 +297,12 @@ function Rides() {
                             <option value="default">Default order</option>
                             <option value="price-low">Price: Low to High</option>
                             <option value="price-high">Price: High to Low</option>
+                            <option value="rating-high">Rating: Highest to Lowest</option>
                         </select>
                     </div>
 
-                    {filteredRides.length > 0 ? (
+                    {/* Ride cards */}
+                    {sortedRides.length > 0 ? (
                         <div className="mt-6 grid gap-5">
                             {sortedRides.map((ride) => (
                                 <article
@@ -304,7 +310,6 @@ function Rides() {
                                     className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md md:p-8"
                                 >
                                     <div className="flex flex-col justify-between gap-6 md:flex-row">
-                                        {/* Route and driver */}
                                         <div className="flex-1">
                                             <div className="flex flex-wrap items-center gap-3">
                         <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800">
@@ -326,9 +331,7 @@ function Rides() {
                                                 <div className="flex-1 space-y-5">
                                                     <div className="flex flex-wrap items-center justify-between gap-2">
                                                         <div>
-                                                            <h3 className="text-lg font-bold">
-                                                                {ride.from}
-                                                            </h3>
+                                                            <h3 className="text-lg font-bold">{ride.from}</h3>
                                                             <p className="mt-1 text-sm text-slate-500">
                                                                 Departure
                                                             </p>
@@ -371,7 +374,7 @@ function Rides() {
                                             </div>
                                         </div>
 
-                                        {/* Price and details link */}
+                                        {/* Price and details */}
                                         <div className="flex min-w-44 flex-col items-start justify-between border-t border-slate-100 pt-5 md:items-end md:border-l md:border-t-0 md:pl-8 md:pt-0">
                                             <div>
                                                 <p className="text-sm text-slate-500">Price per seat</p>
