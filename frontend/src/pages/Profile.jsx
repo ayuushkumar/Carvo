@@ -1,29 +1,97 @@
 
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Profile() {
-    const [profile, setProfile] = useState({
-        name: 'Alex Sharma',
-        email: 'alex@example.com',
-        phone: '',
-        city: 'Chandigarh',
-        bio: '',
-    })
+    const navigate = useNavigate();
 
-    const [editing, setEditing] = useState(false)
-    const [saved, setSaved] = useState(false)
+    const [profile, setProfile] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        city: "",
+        bio: "",
+    });
+
+    const [editing, setEditing] = useState(false);
+    const [saved, setSaved] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        async function loadProfile() {
+            const token = localStorage.getItem("carvoToken");
+
+            if (!token) {
+                navigate("/login");
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    "http://localhost:8080/api/users/me",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (response.status === 401 || response.status === 403) {
+                    localStorage.removeItem("carvoToken");
+                    localStorage.removeItem("carvoUser");
+                    navigate("/login");
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error("Unable to load your profile.");
+                }
+
+                const data = await response.json();
+
+                setProfile({
+                    name: data.fullName || "",
+                    email: data.email || "",
+                    phone: "",
+                    city: "",
+                    bio: "",
+                });
+            } catch (err) {
+                setError(
+                    err instanceof TypeError
+                        ? "Cannot connect to the server. Please try again."
+                        : err.message
+                );
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadProfile();
+    }, [navigate]);
 
     function handleChange(event) {
-        const { name, value } = event.target
-        setProfile((current) => ({ ...current, [name]: value }))
-        setSaved(false)
+        const { name, value } = event.target;
+        setProfile((current) => ({ ...current, [name]: value }));
+        setSaved(false);
     }
 
     function handleSubmit(event) {
-        event.preventDefault()
-        setEditing(false)
-        setSaved(true)
+        event.preventDefault();
+
+        // Only local UI fields can be edited at this stage.
+        // Persistent profile updates need a backend endpoint.
+        setEditing(false);
+        setSaved(true);
+    }
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-slate-50">
+                <p className="text-slate-600">Loading your profile...</p>
+            </div>
+        );
     }
 
     return (
@@ -41,6 +109,17 @@ export default function Profile() {
                         <Link to="/my-rides" className="text-slate-600 hover:text-emerald-700">
                             My Rides
                         </Link>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                localStorage.removeItem("carvoToken");
+                                localStorage.removeItem("carvoUser");
+                                navigate("/login");
+                            }}
+                            className="text-slate-600 hover:text-emerald-700"
+                        >
+                            Log out
+                        </button>
                     </nav>
                 </div>
             </header>
@@ -62,21 +141,27 @@ export default function Profile() {
                     </p>
                 </div>
 
+                {error && (
+                    <p role="alert" className="mt-6 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+                        {error}
+                    </p>
+                )}
+
                 <div className="mt-8 grid gap-6 md:grid-cols-[260px_1fr]">
                     <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-6">
                         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-2xl font-bold text-emerald-800">
-                            {profile.name.trim().charAt(0).toUpperCase() || 'U'}
+                            {profile.name.trim().charAt(0).toUpperCase() || "U"}
                         </div>
                         <h2 className="mt-4 text-lg font-bold">
-                            {profile.name || 'Your name'}
+                            {profile.name || "Your name"}
                         </h2>
                         <p className="mt-1 break-all text-sm text-slate-500">
                             {profile.email}
                         </p>
                         <div className="mt-5 border-t border-slate-100 pt-4">
                             <p className="text-sm text-slate-500">Account status</p>
-                            <p className="mt-1 font-semibold text-amber-600">
-                                Demo profile · Not verified
+                            <p className="mt-1 font-semibold text-emerald-700">
+                                Registered Carvo member
                             </p>
                         </div>
                     </aside>
@@ -93,7 +178,10 @@ export default function Profile() {
                             {!editing && (
                                 <button
                                     type="button"
-                                    onClick={() => setEditing(true)}
+                                    onClick={() => {
+                                        setSaved(false);
+                                        setEditing(true);
+                                    }}
                                     className="rounded-xl border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50"
                                 >
                                     Edit profile
@@ -102,8 +190,8 @@ export default function Profile() {
                         </div>
 
                         {saved && (
-                            <p role="status" className="mt-5 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800">
-                                Profile updated for this demo session.
+                            <p role="status" className="mt-5 rounded-xl bg-amber-50 p-3 text-sm text-amber-800">
+                                Changes are temporary and haven't been saved to the server.
                             </p>
                         )}
 
@@ -132,10 +220,9 @@ export default function Profile() {
                                     name="email"
                                     type="email"
                                     value={profile.email}
-                                    onChange={handleChange}
-                                    disabled={!editing}
+                                    disabled
                                     required
-                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 disabled:bg-slate-50"
+                                    className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none disabled:bg-slate-50"
                                 />
                             </div>
 
@@ -199,8 +286,8 @@ export default function Profile() {
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            setEditing(false)
-                                            setSaved(false)
+                                            setEditing(false);
+                                            setSaved(false);
                                         }}
                                         className="rounded-xl border border-slate-200 px-5 py-3 font-semibold hover:bg-slate-50"
                                     >
@@ -213,10 +300,10 @@ export default function Profile() {
                 </div>
 
                 <p className="mt-6 text-sm text-slate-500">
-                    This is a frontend demo. Profile changes are held in page memory and
-                    are not saved to a database.
+                    Your name and email are loaded from your Carvo account. Phone,
+                    city, bio, and profile updates aren't connected to the backend yet.
                 </p>
             </main>
         </div>
-    )
+    );
 }
