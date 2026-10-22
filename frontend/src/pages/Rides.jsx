@@ -46,6 +46,7 @@ const sampleRides = [
 
 function Rides() {
     const [searchParams] = useSearchParams()
+    const [sortOrder, setSortOrder] = useState('default')
 
     const [search, setSearch] = useState(() => ({
         from: searchParams.get('from') || '',
@@ -67,6 +68,7 @@ function Rides() {
             .toLowerCase()
             .includes(search.from.trim().toLowerCase())
 
+
         const matchesTo = ride.to
             .toLowerCase()
             .includes(search.to.trim().toLowerCase())
@@ -76,6 +78,18 @@ function Rides() {
         const matchesPassengers = ride.seats >= Number(search.passengers)
 
         return matchesFrom && matchesTo && matchesDate && matchesPassengers
+    })
+
+    const sortedRides = [...filteredRides].sort((a, b) => {
+        if (sortOrder === 'price-low') {
+            return a.price - b.price
+        }
+
+        if (sortOrder === 'price-high') {
+            return b.price - a.price
+        }
+
+        return 0
     })
 
     function handleSearch(event) {
@@ -246,6 +260,7 @@ function Rides() {
                 </section>
 
                 {/* Search results */}
+
                 <section className="mt-12">
                     <div className="flex flex-wrap items-end justify-between gap-3">
                         <div>
@@ -264,9 +279,26 @@ function Rides() {
                         </p>
                     </div>
 
+                    <div className="mt-5 flex flex-wrap items-center gap-3">
+                        <label htmlFor="sort-price" className="text-sm font-semibold">
+                            Sort rides:
+                        </label>
+
+                        <select
+                            id="sort-price"
+                            value={sortOrder}
+                            onChange={(event) => setSortOrder(event.target.value)}
+                            className="rounded-lg border border-slate-300 bg-white px-4 py-2 outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+                        >
+                            <option value="default">Default order</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                        </select>
+                    </div>
+
                     {filteredRides.length > 0 ? (
                         <div className="mt-6 grid gap-5">
-                            {filteredRides.map((ride) => (
+                            {sortedRides.map((ride) => (
                                 <article
                                     key={ride.id}
                                     className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md md:p-8"
