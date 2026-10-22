@@ -165,6 +165,89 @@ function Home() {
                     </div>
                 </section>
 
+
+                {/* Homepage Ride Search */}
+                <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+                    <div className="mb-6">
+                        <p className="font-semibold text-emerald-700">
+                            YOUR NEXT JOURNEY STARTS HERE
+                        </p>
+                        <h2 className="mt-2 text-2xl font-bold md:text-3xl">
+                            Find your perfect ride
+                        </h2>
+                        <p className="mt-2 text-slate-600">
+                            Choose your route and travel date to find people going your way.
+                        </p>
+                    </div>
+
+                    <form
+                        className="grid gap-5 md:grid-cols-2 lg:grid-cols-4"
+                        onSubmit={(event) => {
+                            event.preventDefault()
+
+                            const formData = new FormData(event.currentTarget)
+                            const from = formData.get('from').trim()
+                            const to = formData.get('to').trim()
+                            const date = formData.get('date')
+
+                            const params = new URLSearchParams({ from, to, date })
+                            window.location.href = `/rides?${params.toString()}`
+                        }}
+                    >
+                        <div>
+                            <label htmlFor="ride-from" className="mb-2 block text-sm font-semibold">
+                                From
+                            </label>
+                            <input
+                                id="ride-from"
+                                name="from"
+                                type="text"
+                                placeholder="Starting location"
+                                required
+                                className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="ride-to" className="mb-2 block text-sm font-semibold">
+                                To
+                            </label>
+                            <input
+                                id="ride-to"
+                                name="to"
+                                type="text"
+                                placeholder="Your destination"
+                                required
+                                className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="ride-date" className="mb-2 block text-sm font-semibold">
+                                Travel date
+                            </label>
+                            <input
+                                id="ride-date"
+                                name="date"
+                                type="date"
+                                min={new Date().toLocaleDateString('en-CA')}
+                                required
+                                className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            />
+                        </div>
+
+                        <div className="flex items-end">
+                            <button
+                                type="submit"
+                                className="w-full rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white transition hover:bg-emerald-800"
+                            >
+                                Search rides →
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+
                 {/* Fair Fare Calculator */}
                 <section
                     id="fare-calculator"
