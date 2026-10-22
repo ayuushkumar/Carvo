@@ -7,19 +7,21 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.carvo.backend.dto.LoginRequest;
+import com.carvo.backend.security.JwtService;
 
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    private final JwtService jwtService;
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, JwtService jwtService) {
         this.authService = authService;
+        this.jwtService = jwtService;
     }
-
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public Map<String, Object> register(
@@ -35,18 +37,23 @@ public class AuthController {
         );
     }
 
+
     @PostMapping("/login")
     public Map<String, Object> login(
             @Valid @RequestBody LoginRequest request) {
 
         User user = authService.login(request);
+        String token = jwtService.generateToken(user.getEmail());
 
         return Map.of(
                 "message", "Login successful",
+                "token", token,
+                "tokenType", "Bearer",
                 "id", user.getId(),
                 "fullName", user.getFullName(),
                 "email", user.getEmail()
         );
     }
+
 
 }
