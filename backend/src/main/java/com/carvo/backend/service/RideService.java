@@ -59,4 +59,36 @@ public class RideService {
                         0
                 );
     }
+
+    @Transactional(readOnly = true)
+    public List<Ride> searchRides(String origin, String destination) {
+
+        if (origin == null || origin.isBlank()
+                || destination == null || destination.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Origin and destination are required");
+        }
+
+        if (origin.trim().equalsIgnoreCase(destination.trim())) {
+            throw new IllegalArgumentException(
+                    "Origin and destination must be different");
+        }
+
+        return rideRepository
+                .findByOriginIgnoreCaseAndDestinationIgnoreCaseAndDepartureTimeAfterAndAvailableSeatsGreaterThanOrderByDepartureTimeAsc(
+                        origin.trim(),
+                        destination.trim(),
+                        LocalDateTime.now(),
+                        0
+                );
+    }
+
+    @Transactional(readOnly = true)
+    public List<Ride> getMyRides(String authenticatedEmail) {
+        return rideRepository
+                .findByDriver_EmailIgnoreCaseOrderByDepartureTimeAsc(
+                        authenticatedEmail
+                );
+    }
+
 }
