@@ -80,5 +80,33 @@ public class BookingService {
                         authenticatedEmail
                 );
     }
+    @Transactional
+    public Booking cancelBooking(Long bookingId, String authenticatedEmail) {
+        Booking booking = bookingRepository
+                .findByIdAndPassengerEmailForUpdate(bookingId, authenticatedEmail)
+                .orElseThrow(() -> new RuntimeException(
+                        "Booking not found or you are not allowed to cancel it"
+                ));
+
+        if (!"CONFIRMED".equals(booking.getStatus())) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.CONFLICT,
+                    "This booking has already been cancelled"
+            );
+        }
+
+        Long rideId = booking.getRide().getId();
+
+        Ride ride = rideRepository.findByIdForUpdate(rideId)
+                .orElseThrow(() -> new RuntimeException("Ride not found"));
+
+        ride.setAvailableSeats(
+                ride.getAvailableSeats() + booking.getSeatsBooked()
+        );
+
+        booking.setStatus("CANCELLED");
+
+        return bookingRepository.save(booking);
+    }
 
 }
