@@ -86,4 +86,26 @@ public class RideController {
                 .toList();
     }
 
+    @GetMapping("/my-rides")
+    public List<Map<String, Object>> getMyRides(
+            Authentication authentication) {
+
+        return rideService.getMyRides(authentication.getName())
+                .stream()
+                .map(ride -> {
+                    Map<String, Object> response = new LinkedHashMap<>();
+                    response.put("id", ride.getId());
+                    response.put("origin", ride.getOrigin());
+                    response.put("destination", ride.getDestination());
+                    response.put("departureTime", ride.getDepartureTime());
+                    response.put("availableSeats", ride.getAvailableSeats());
+                    response.put("pricePerSeat", ride.getPricePerSeat());
+                    response.put("driverId", ride.getDriver().getId());
+                    response.put("driverName", ride.getDriver().getFullName());
+                    return response;
+                })
+                .toList();
+    }
+
+
 }

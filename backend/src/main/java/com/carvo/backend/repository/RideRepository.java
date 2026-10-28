@@ -24,5 +24,10 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
             LocalDateTime departureTime,
             Integer availableSeats
     );
+    @EntityGraph(attributePaths = {"driver"})
+    List<Ride> findByDriver_EmailIgnoreCaseOrderByDepartureTimeAsc(
+            String email
+    );
+
 
 }

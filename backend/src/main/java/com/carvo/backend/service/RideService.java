@@ -83,4 +83,12 @@ public class RideService {
                 );
     }
 
+    @Transactional(readOnly = true)
+    public List<Ride> getMyRides(String authenticatedEmail) {
+        return rideRepository
+                .findByDriver_EmailIgnoreCaseOrderByDepartureTimeAsc(
+                        authenticatedEmail
+                );
+    }
+
 }
