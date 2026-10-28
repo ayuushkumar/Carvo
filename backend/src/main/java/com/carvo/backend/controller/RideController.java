@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -62,4 +63,27 @@ public class RideController {
                 })
                 .toList();
     }
+
+    @GetMapping("/search")
+    public List<Map<String, Object>> searchRides(
+            @RequestParam String origin,
+            @RequestParam String destination) {
+
+        return rideService.searchRides(origin, destination)
+                .stream()
+                .map(ride -> {
+                    Map<String, Object> response = new LinkedHashMap<>();
+                    response.put("id", ride.getId());
+                    response.put("origin", ride.getOrigin());
+                    response.put("destination", ride.getDestination());
+                    response.put("departureTime", ride.getDepartureTime());
+                    response.put("availableSeats", ride.getAvailableSeats());
+                    response.put("pricePerSeat", ride.getPricePerSeat());
+                    response.put("driverId", ride.getDriver().getId());
+                    response.put("driverName", ride.getDriver().getFullName());
+                    return response;
+                })
+                .toList();
+    }
+
 }
