@@ -5,8 +5,10 @@ import com.carvo.backend.entity.Booking;
 import com.carvo.backend.service.BookingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -69,5 +71,35 @@ public class BookingController {
                 .toList();
     }
 
-}
+    @DeleteMapping("/{bookingId}")
+    public Map<String, Object> cancelBooking(
+            @PathVariable Long bookingId,
+            Authentication authentication) {
 
+        Booking booking = bookingService.cancelBooking(
+                bookingId,
+                authentication.getName()
+        );
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("message", "Booking cancelled successfully");
+        response.put("bookingId", booking.getId());
+        response.put("rideId", booking.getRide().getId());
+        response.put("status", booking.getStatus());
+
+        return response;
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Map<String, Object>> handleResponseStatusException(
+            ResponseStatusException exception) {
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("message", exception.getReason());
+        response.put("status", exception.getStatusCode().value());
+
+        return ResponseEntity
+                .status(exception.getStatusCode())
+                .body(response);
+    }
+}
