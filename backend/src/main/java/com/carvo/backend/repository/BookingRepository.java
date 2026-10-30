@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    @EntityGraph(attributePaths = {"ride", "passenger"})
+    @EntityGraph(attributePaths = {"ride", "ride.driver", "passenger"})
     List<Booking> findByPassenger_EmailIgnoreCaseOrderByCreatedAtDesc(
             String email
     );

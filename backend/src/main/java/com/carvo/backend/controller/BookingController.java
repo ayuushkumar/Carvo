@@ -59,9 +59,17 @@ public class BookingController {
 
                     response.put("bookingId", booking.getId());
                     response.put("rideId", booking.getRide().getId());
+
                     response.put("origin", booking.getRide().getOrigin());
                     response.put("destination", booking.getRide().getDestination());
                     response.put("departureTime", booking.getRide().getDepartureTime());
+
+                    response.put("driverName",
+                            booking.getRide().getDriver().getFullName());
+
+                    response.put("pricePerSeat",
+                            booking.getRide().getPricePerSeat());
+
                     response.put("seatsBooked", booking.getSeatsBooked());
                     response.put("status", booking.getStatus());
                     response.put("createdAt", booking.getCreatedAt());
@@ -70,6 +78,7 @@ public class BookingController {
                 })
                 .toList();
     }
+
 
     @DeleteMapping("/{bookingId}")
     public Map<String, Object> cancelBooking(
